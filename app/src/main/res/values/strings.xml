@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cam</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="takePicture">TakePicture</string>
+    <string name="flip_camera">flip_camera</string>
+</resources>
