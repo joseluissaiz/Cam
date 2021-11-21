@@ -1,5 +1,6 @@
 package com.overshade.cam;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Size;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
+import androidx.camera.core.CameraControl;
+import androidx.camera.core.CameraInfo;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.CameraXConfig;
 import androidx.camera.core.ImageCapture;
@@ -46,11 +51,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -70,6 +75,9 @@ public class Cam extends Fragment {
     Preview                                 preview;
     ImageCapture                            imgCap;
     CameraXConfig                           cameraConfig;
+    CameraInfo                              cameraInfo;
+    CameraControl                           cameraControl;
+    ScaleGestureDetector                    gestureDetector;
     Size                                    screen;
     int                                     asp;
     int                                     flMode;
@@ -138,6 +146,7 @@ public class Cam extends Fragment {
                 } else {
                     setCameraFlash(false);
                 }
+                cameraInfo = cameraProvider.getAvailableCameraInfos().get(0);
             } else {
                 lensFacing = CameraSelector.LENS_FACING_FRONT;
                 if (torchMode) {
@@ -147,6 +156,7 @@ public class Cam extends Fragment {
                 } else {
                     flMode = ImageCapture.FLASH_MODE_OFF;
                 }
+                cameraInfo = cameraProvider.getAvailableCameraInfos().get(1);
             }
             startCamera();
         });
@@ -186,6 +196,7 @@ public class Cam extends Fragment {
 
     /* Camera methods */
 
+    @SuppressLint("ClickableViewAccessibility")
     public void startCamera() {
         //Make sure there isn't another camera instance running before starting
         cameraProviderFuture =
@@ -241,12 +252,43 @@ public class Cam extends Fragment {
                     }
                 });
 
+                if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+                    cameraInfo =
+                            cameraProvider.getAvailableCameraInfos().get(1);
+                } else {
+                    cameraInfo =
+                            cameraProvider.getAvailableCameraInfos().get(0);
+
+                }
 
                 //bind to lifecycle:
                 Camera camera = cameraProvider.bindToLifecycle(
                         this, cameraSelector, preview, imgCap);
 
                 preview.setSurfaceProvider(pvView.getSurfaceProvider());
+
+                cameraControl = camera.getCameraControl();
+                ScaleGestureDetector.SimpleOnScaleGestureListener listener =
+                        new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    @Override
+                    public boolean onScale(ScaleGestureDetector detector) {
+                        System.out.println("calculeddd");
+                        float scale = Objects.requireNonNull(
+                                cameraInfo.getZoomState().getValue())
+                                .getZoomRatio() * detector.getScaleFactor();
+                        cameraControl.setZoomRatio(scale);
+                        return true;
+                    }
+                };
+                gestureDetector = new ScaleGestureDetector(requireActivity(),
+                        listener);
+
+                pvView.setOnTouchListener((view, motionEvent) -> {
+                    gestureDetector.onTouchEvent(motionEvent);
+                    System.out.println("Toching");
+                    return true;
+                });
+
 
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -481,6 +523,7 @@ public class Cam extends Fragment {
         cameraProvider.unbindAll();
         Camera camera = cameraProvider.bindToLifecycle(
                 this, cameraSelector, preview, imgCap);
+        cameraControl = camera.getCameraControl();
     }
 
     private void takeFrontFlashPhoto() {

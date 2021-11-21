@@ -21,7 +21,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginBottom="60dp"/>
 
         <!-- Here goes the flash and cam-took layouts -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +54,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="185dp"
+            android:layout_height="125dp"
             android:background="#3B000000"
             app:layout_constraintBottom_toBottomOf="@+id/view_finder"
             app:layout_constraintTop_toTopOf="parent"
@@ -67,15 +68,14 @@
                 android:layout_margin="24dp"
                 android:background="@drawable/take_photo_button"
                 android:contentDescription="@string/takePicture"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/flip_button"
-                android:layout_width="65dp"
+                android:layout_width="62dp"
                 android:layout_height="65dp"
                 android:background="@null"
                 android:contentDescription="@string/flip_camera"
@@ -84,7 +84,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/capture_button"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.318"
+                app:layout_constraintVertical_bias="0.55"
                 app:srcCompat="@drawable/ic_flip" />
 
             <ImageButton
@@ -99,7 +99,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/capture_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.318"
+                app:layout_constraintVertical_bias="0.55"
                 app:srcCompat="@drawable/ic_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
