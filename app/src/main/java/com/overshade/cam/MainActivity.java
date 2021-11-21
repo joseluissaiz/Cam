@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         if(allPermissionsGranted() && mainFilesCreated()) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.cameraView, new Camera(), "CAMERA").commit();
+                    .add(R.id.cameraView, new Cam(), "CAMERA").commit();
         } else {
             this.finish();
         }
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 getSupportFragmentManager()
-                        .beginTransaction().add(new Camera(), "CAMERA")
+                        .beginTransaction().add(new Cam(), "CAMERA")
                         .commit();
             } else {
                 Toast.makeText(this,
