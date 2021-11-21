@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <TextureView
             android:id="@+id/view_finder"
             android:layout_width="match_parent"
@@ -22,51 +23,88 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
+        <!-- Here goes the flash and camera-took layouts -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/camera_took"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#46FFFFFF"
+            android:visibility="gone"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/frontal_flash"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E8FFFFFF"
+            android:visibility="gone"/>
+
         <ImageButton
-            android:id="@+id/capture_button"
-            android:layout_width="92dp"
-            android:layout_height="92dp"
-            android:layout_margin="24dp"
-            android:background="@drawable/take_photo_button"
+            android:id="@+id/flash_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="0dp"
+            android:background="@drawable/ic_flash_off"
             android:contentDescription="@string/takePicture"
-            app:layout_constraintBottom_toBottomOf="@+id/view_finder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.935"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/flip_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginEnd="40dp"
-            android:background="@null"
-            android:contentDescription="@string/flip_camera"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.965"
-            app:layout_constraintStart_toEndOf="@+id/capture_button"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:background="#3B000000"
+            app:layout_constraintBottom_toBottomOf="@+id/view_finder"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.889"
-            app:srcCompat="@drawable/ic_flip" />
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="-16dp">
 
-        <ImageButton
-            android:id="@+id/gallery_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginStart="40dp"
-            android:background="@drawable/gallery_button"
-            android:contentDescription="@string/flip_camera"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.889"
-            app:srcCompat="@drawable/ic_flip" />
+            <ImageButton
+                android:id="@+id/capture_button"
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_margin="24dp"
+                android:background="@drawable/take_photo_button"
+                android:contentDescription="@string/takePicture"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <ImageButton
+                android:id="@+id/flip_button"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@null"
+                android:contentDescription="@string/flip_camera"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/capture_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.318"
+                app:srcCompat="@drawable/ic_flip" />
+
+            <ImageButton
+                android:id="@+id/gallery_button"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/gallery_button"
+                android:contentDescription="@string/flip_camera"
+                android:padding="10dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/capture_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.318"
+                app:srcCompat="@drawable/ic_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </FrameLayout>
