@@ -19,6 +19,10 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,9 +33,12 @@ import androidx.camera.core.CameraControl;
 import androidx.camera.core.CameraInfo;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.CameraXConfig;
+import androidx.camera.core.FocusMeteringAction;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
+import androidx.camera.core.MeteringPoint;
+import androidx.camera.core.MeteringPointFactory;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -69,6 +76,7 @@ public class Cam extends Fragment {
     AppCompatImageButton                    flipButton;
     AppCompatImageButton                    flashButton;
     AppCompatImageButton                    galleryButton;
+    ImageView                               focusSelector;
     //Camera config
     ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     ProcessCameraProvider                   cameraProvider;
@@ -78,6 +86,7 @@ public class Cam extends Fragment {
     CameraInfo                              cameraInfo;
     CameraControl                           cameraControl;
     ScaleGestureDetector                    gestureDetector;
+    boolean                                 isZooming;
     Size                                    screen;
     int                                     asp;
     int                                     flMode;
@@ -134,6 +143,7 @@ public class Cam extends Fragment {
         photoButton = view.findViewById(R.id.capture_button);
         flipButton = view.findViewById(R.id.flip_button);
         flashButton = view.findViewById(R.id.flash_button);
+        focusSelector = view.findViewById(R.id.focus_selector);
 
         flipButton.setOnClickListener(v -> {
             new ButtonRotateAnimation
@@ -272,6 +282,7 @@ public class Cam extends Fragment {
                         new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                     @Override
                     public boolean onScale(ScaleGestureDetector detector) {
+                        isZooming = true;
                         System.out.println("calculeddd");
                         float scale = Objects.requireNonNull(
                                 cameraInfo.getZoomState().getValue())
@@ -285,6 +296,20 @@ public class Cam extends Fragment {
 
                 pvView.setOnTouchListener((view, motionEvent) -> {
                     gestureDetector.onTouchEvent(motionEvent);
+                    if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        if (!isZooming) {
+                            startFocusAnimation(motionEvent.getX(),
+                                    motionEvent.getY());
+                            MeteringPointFactory factory =
+                                    pvView.getMeteringPointFactory();
+                            MeteringPoint point = factory.createPoint(
+                                    motionEvent.getX(), motionEvent.getY());
+                            FocusMeteringAction action =
+                                    new FocusMeteringAction.Builder(point).build();
+                            cameraControl.startFocusAndMetering(action);
+                        }
+                        isZooming = false;
+                    }
                     System.out.println("Toching");
                     return true;
                 });
@@ -537,6 +562,61 @@ public class Cam extends Fragment {
             h.postDelayed(this::takePhoto, 2000);
 
         });
+    }
+
+    private void startFocusAnimation(float x, float y) {
+        RelativeLayout.LayoutParams params =
+                (RelativeLayout.LayoutParams) focusSelector.getLayoutParams();
+        params.topMargin = (int) (y-100f);
+        params.leftMargin = (int) (x-100f);
+        focusSelector.setLayoutParams(params);
+        focusSelector.setVisibility(View.VISIBLE);
+        ScaleAnimation endAnimation = new ScaleAnimation(
+                1f,0.0f,1f,0.0f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f
+        );
+        ScaleAnimation startAnimation = new ScaleAnimation(
+                0.0f,1f,0.0f,1f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f
+        );
+        startAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                focusSelector.startAnimation(endAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        endAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                focusSelector.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        startAnimation.setDuration(1000);
+        endAnimation.setDuration(500);
+
+        focusSelector.startAnimation(startAnimation);
     }
 
 }

@@ -12,19 +12,21 @@
         android:layout_height="match_parent">
 
 
+        <!-- Here goes the flash and cam-took layouts -->
         <androidx.camera.view.PreviewView
             android:id="@+id/view_finder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            android:layout_marginBottom="60dp"/>
+            app:layout_constraintVertical_bias="1.0">
 
-        <!-- Here goes the flash and cam-took layouts -->
+        </androidx.camera.view.PreviewView>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/camera_took"
             android:layout_width="match_parent"
@@ -38,6 +40,24 @@
             android:layout_height="match_parent"
             android:background="#E8FFFFFF"
             android:visibility="gone"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="60dp" >
+
+            <ImageView
+                android:id="@+id/focus_selector"
+                android:foregroundGravity="center"
+                android:scaleType="centerCrop"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_focus_selector"
+                android:visibility="gone"
+                android:contentDescription="@string/focus_metering_selector"/>
+
+        </RelativeLayout>
 
         <ImageButton
             android:id="@+id/flash_button"
@@ -103,8 +123,17 @@
                 app:srcCompat="@drawable/ic_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_cam_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_finder" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>
